@@ -7,7 +7,7 @@ let theWheel = null;
 document.addEventListener("readystatechange", async () => {
     const res = await cargarInformacion('colaboradores_20251211.json');
     premios = await cargarInformacion('premios.json');
-
+    console.log(res.length + ' colaboradores cargados.');
     const datosNoAsistencia = localStorage.getItem('noAsistencia');
     const noAsistencia = datosNoAsistencia ? JSON.parse(datosNoAsistencia) : [];
     const noAsistenciaSet = new Set(noAsistencia);  
