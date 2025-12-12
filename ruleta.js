@@ -20,7 +20,7 @@ document.addEventListener("readystatechange", async () => {
     const colaboradoresFiltrados = mezclarArray(
         colaboradoresTotales.filter(colaborador => {
             const id = colaborador.colaboradorIDENTIFICACION;
-            return !noAsistenciaSet.has(id) && !ganadoresSet.has(id);
+            return noAsistenciaSet.has(id) && !ganadoresSet.has(id);
         })
     );
 
