@@ -16,10 +16,12 @@ document.addEventListener("readystatechange", async () => {
     const ganadoresPrevios = datosGanadores ? JSON.parse(datosGanadores) : [];
     const ganadoresSet = new Set(ganadoresPrevios.map(g => g.identificacion));
 
-    const colaboradoresFiltrados = res.filter(colaborador => {
-        const id = colaborador.colaboradorIDENTIFICACION;
-        return noAsistenciaSet.has(id) && !ganadoresSet.has(id);
-    });
+    const colaboradoresFiltrados = mezclarArray(
+        res.filter(colaborador => {
+            const id = colaborador.colaboradorIDENTIFICACION;
+            return noAsistenciaSet.has(id) && !ganadoresSet.has(id);
+        })
+    );
 
     const colorInicio = '#6FF525'; // azul claro
     const colorFin = '#F5D025';    // azul fuerte (bootstrap primary)
@@ -141,7 +143,10 @@ function alertPrize(indicatedSegment) {
         if (!result.isConfirmed) return;
 
         // 🔹 Quitar al ganador del array de colaboradores
-        colaboradores = colaboradores.filter(c => c.key !== indicatedSegment.key);
+        colaboradores = mezclarArray(
+            colaboradores.filter(c => c.key !== indicatedSegment.key)
+        );
+
 
         // 🔹 Recrear la ruleta sin el ganador
         theWheel = new Winwheel({
@@ -231,4 +236,15 @@ function colorDegradado(hexInicio, hexFin, factor) {
     );
 
     return r2h(rgb);
+}
+
+
+// 🔀 Mezcla aleatoria (Fisher-Yates)
+function mezclarArray(array) {
+    const arr = [...array]; // copia para no mutar el original
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
