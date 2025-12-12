@@ -117,7 +117,7 @@ async function mostrarColaboradores() {
                                 <th class="text-center">#</th>
                                 <th>Nombre</th>
                                 <th>Identificación</th>
-                                <th>No asistio</th>
+                                <th>Asistió</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -175,6 +175,8 @@ async function mostrarColaboradores() {
 // 3) PREMIOS
 async function mostrarPremios() {
     const contenedor = document.getElementById('contenedorPremios');
+    const proximoGiro = parseInt(localStorage.getItem('premioGiro') || '1', 10);
+
 
     // Cargar el JSON de premios
     const res = await cargarInformacion('premios.json');
@@ -217,13 +219,31 @@ async function mostrarPremios() {
     `;
 
     premios.forEach((p, index) => {
+
+        const giro = parseInt(p.premioGiro, 10);
+
+        let rowClass = '';
+        let badge = '';
+
+        if (giro < proximoGiro) {
+            rowClass = 'table-secondary';
+            badge = '<span class="badge bg-secondary">Jugado</span>';
+        }
+        else if (giro === proximoGiro) {
+            rowClass = 'table-warning fw-bold';
+            badge = '<span class="badge bg-warning text-dark">🎯 Próximo</span>';
+        }
+
         html += `
-            <tr>
-                <td class="text-center">${index + 1}</td>
-                <td>${p.premioNombre || ''}</td>
-                <td>${p.premioGiro || ''}</td>
-            </tr>
-        `;
+        <tr class="${rowClass}">
+            <td class="text-center">${index + 1}</td>
+            <td>
+                ${p.premioNombre || ''}
+                ${badge ? `<div class="mt-1">${badge}</div>` : ''}
+            </td>
+            <td class="text-center">${p.premioGiro || ''}</td>
+        </tr>
+    `;
     });
 
     html += `
@@ -242,3 +262,52 @@ async function cargarInformacion(file) {
     return response.json();
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+
+    const btnBorrar = document.getElementById('btnBorrarTodo');
+    if (!btnBorrar) return;
+
+    btnBorrar.addEventListener('click', async () => {
+
+        const result = await Swal.fire({
+            title: '⚠️ ¿Estás seguro?',
+            html: `
+                <p>Esta acción eliminará <strong>todos los datos guardados</strong>:</p>
+                <ul style="text-align:left; margin-bottom:0;">
+                    <li>🏆 Ganadores (ganadoresRuleta)</li>
+                    <li>🎁 Premios jugados (premiosJugados / premiosJugadosRuleta)</li>
+                    <li>👥 Asistencias (noAsistencia)</li>
+                </ul>
+                <p class="text-danger mt-3"><strong>Esta acción no se puede deshacer.</strong></p>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, borrar todo',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (!result.isConfirmed) return;
+
+        // 🔥 BORRADO DE DATOS (según tus llaves reales)
+        localStorage.removeItem('ganadoresRuleta');
+        localStorage.removeItem('noAsistencia');
+
+        // premios jugados (dejamos ambas por compatibilidad)
+        localStorage.removeItem('premiosJugados');
+        localStorage.removeItem('premioGiro');
+        localStorage.removeItem('premiosJugadosRuleta');
+
+        await Swal.fire({
+            icon: 'success',
+            title: 'Datos eliminados',
+            text: 'La información fue borrada correctamente.',
+            timer: 1600,
+            showConfirmButton: false
+        });
+
+        location.reload();
+    });
+
+});

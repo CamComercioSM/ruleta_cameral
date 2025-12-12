@@ -10,7 +10,7 @@ document.addEventListener("readystatechange", async () => {
     console.log(res.length + ' colaboradores cargados.');
     const datosNoAsistencia = localStorage.getItem('noAsistencia');
     const noAsistencia = datosNoAsistencia ? JSON.parse(datosNoAsistencia) : [];
-    const noAsistenciaSet = new Set(noAsistencia);  
+    const noAsistenciaSet = new Set(noAsistencia);
 
     const datosGanadores = localStorage.getItem('ganadoresRuleta');
     const ganadoresPrevios = datosGanadores ? JSON.parse(datosGanadores) : [];
@@ -18,15 +18,25 @@ document.addEventListener("readystatechange", async () => {
 
     const colaboradoresFiltrados = res.filter(colaborador => {
         const id = colaborador.colaboradorIDENTIFICACION;
-        return !noAsistenciaSet.has(id) && !ganadoresSet.has(id);
+        return noAsistenciaSet.has(id) && !ganadoresSet.has(id);
     });
 
-    colaboradores = colaboradoresFiltrados.map(colaborador => ({
-        fillStyle: '#7de6ef',
-        text: colaborador.colaboradorNOMBRECOMPLETO,
-        key: colaborador.colaboradorIDENTIFICACION,
-        foto: colaborador.colaboradorFOTO
-    }));
+    const colorInicio = '#6FF525'; // azul claro
+    const colorFin = '#F5D025';    // azul fuerte (bootstrap primary)
+
+    colaboradores = colaboradoresFiltrados.map((colaborador, index) => {
+
+        const factor = colaboradoresFiltrados.length > 1
+            ? index / (colaboradoresFiltrados.length - 1)
+            : 0;
+
+        return {
+            fillStyle: colorDegradado(colorInicio, colorFin, factor),
+            text: colaborador.colaboradorNOMBRECOMPLETO,
+            key: colaborador.colaboradorIDENTIFICACION,
+            foto: colaborador.colaboradorFOTO
+        };
+    });
 
 
     // Crear la ruleta centrada
@@ -93,34 +103,65 @@ function alertPrize(indicatedSegment) {
     premioGiro++;
     localStorage.setItem('premioGiro', String(premioGiro));
 
-    // 🔹 Quitar al ganador del array de colaboradores
-    colaboradores = colaboradores.filter(c => c.key !== indicatedSegment.key);
+    // 🔹 Construir HTML del modal del ganador
+    let html = `
+    <div style="text-align:center;">
+        <h2 style="margin-bottom:8px;">${indicatedSegment.text}</h2>
 
-    theWheel = new Winwheel({
-        numSegments: colaboradores.length,
-        outerRadius: canvas.height / 2,
-        centerX: canvas.width / 2,
-        centerY: canvas.height / 2,
-        textFontSize: 9,
-        segments: colaboradores,
-        animation: {
-            type: 'spinToStop',
-            duration: 5,
-            spins: 8,
-            callbackFinished: alertPrize
-        }
-    });
-    let html = `<h2 style="margin-bottom:10px;">${indicatedSegment.text}</h2>`;
+        <div style="font-size:1.1rem; margin-bottom:6px; color:#6c757d;">
+            🎁 Premio ganado
+        </div>
+
+        <div style="
+            font-size:1.3rem;
+            font-weight:700;
+            color:#198754;
+            margin-bottom:8px;
+        ">
+            ${premio ? premio.premioNombre : 'Premio sorpresa'}
+        </div>
+
+        <div style="font-size:0.9rem; color:#6c757d;">
+            Giro #${premioGiro - 1}
+        </div>
+    </div>
+`;
 
     Swal.fire({
-        title: '🎉 Ganador',
+        title: '🎉 ¡Tenemos ganador!',
         html: html,
-        imageUrl: indicatedSegment.foto,
+        imageUrl: indicatedSegment.foto || undefined,
         imageWidth: 180,
         imageHeight: 180,
         imageAlt: 'Foto del ganador',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false
+    }).then((result) => {
+
+        if (!result.isConfirmed) return;
+
+        // 🔹 Quitar al ganador del array de colaboradores
+        colaboradores = colaboradores.filter(c => c.key !== indicatedSegment.key);
+
+        // 🔹 Recrear la ruleta sin el ganador
+        theWheel = new Winwheel({
+            numSegments: colaboradores.length,
+            outerRadius: canvas.height / 2,
+            centerX: canvas.width / 2,
+            centerY: canvas.height / 2,
+            textFontSize: 9,
+            segments: colaboradores,
+            animation: {
+                type: 'spinToStop',
+                duration: 5,
+                spins: 8,
+                callbackFinished: alertPrize
+            }
+        });
+
     });
+
+
 }
 
 async function cargarInformacion(file) {
@@ -177,3 +218,17 @@ function mostrarCuentaRegresiva() {
 }
 
 
+// 🎨 Genera un color degradado entre dos colores hex
+function colorDegradado(hexInicio, hexFin, factor) {
+    const h2r = hex => hex.match(/\w\w/g).map(x => parseInt(x, 16));
+    const r2h = rgb => '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+
+    const c1 = h2r(hexInicio);
+    const c2 = h2r(hexFin);
+
+    const rgb = c1.map((v, i) =>
+        Math.round(v + factor * (c2[i] - v))
+    );
+
+    return r2h(rgb);
+}
