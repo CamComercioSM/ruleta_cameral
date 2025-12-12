@@ -18,10 +18,14 @@
 
         <div class="text-center mb-4">
             <h1 class="mb-1">Ganadores del sorteo</h1>
-            <p class="text-muted">Listado de la información almacenada en el navegador.</p>           
+            <p class="text-muted">Listado de la información almacenada en el navegador.</p>
         </div>
 
-        <!-- Fila 1: Ganadores -->
+        <div class="mb-3 text-start">
+            <a href="index.php" class="btn btn-success">
+                🔄 Regresar a ruleta
+            </a>
+        </div>
         <div class="row mb-4">
             <div class="col-12" id="contenedorGanadores"></div>
         </div>
@@ -34,7 +38,7 @@
     </div>
 
     <div class="container my-5">
-        <div class="text-center mb-4">            
+        <div class="text-center mb-4">
             <div class="mt-3">
                 <button id="btnBorrarTodo" class="btn btn-danger btn-sm">
                     🗑️ Borrar todos los datos
