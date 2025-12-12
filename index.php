@@ -24,6 +24,50 @@
             color: #ffffff;
         }
 
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            flex: 1;
+            padding-right: 35%;
+            /* espacio para el sidebar */
+        }
+
+        /* Sidebar */
+        .sidebar-navidad {
+            width: 35%;
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            background: transparent;
+            border: none;
+            z-index: -1;
+        }
+
+
+
+        .sidebar-navidad iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar-navidad {
+                display: none;
+            }
+
+            .main-content {
+                padding-right: 0;
+            }
+        }
+
+
         .app-container {
             min-height: 100vh;
             display: flex;
@@ -127,82 +171,101 @@
 </head>
 
 <body>
-<ul class="lightrope">
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-</ul>
+    <ul class="lightrope">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 
-    <div class="app-container">
+    <div class="layout">
 
-        <!-- Branding -->
-        <div class="brand-header">
-            <h1>🎡 Ruleta Cameral</h1>
-            <p>Participa, gira y gana premios especiales</p>
-        </div>
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-content">
 
-        <!-- Ruleta -->
-        <div class="the_wheel">
-            <div class="wheel-wrapper">
-                <img src="image.png" alt="Puntero ruleta" class="wheel-pointer">
-                <canvas id="canvas" width="1200" height="850">
-                    Tu navegador no soporta canvas.
-                </canvas>
+            <div class="app-container">
+
+                <!-- Branding -->
+                <div class="brand-header">
+                    <h1>🎡 Ruleta Cameral</h1>
+                    <p>Participa, gira y gana premios especiales</p>
+                </div>
+
+                <!-- Ruleta -->
+                <div class="the_wheel">
+                    <div class="wheel-wrapper">
+                        <img src="image.png" alt="Puntero ruleta" class="wheel-pointer">
+                        <canvas id="canvas" width="1200" height="850">
+                            Tu navegador no soporta canvas.
+                        </canvas>
+                    </div>
+                </div>
+
+                <!-- Controles -->
+                <div class="controls">
+                    <button id="btnGirar">🎯 Girar ruleta</button>
+
+                    <a href="ganadores.php" class="btn-ganadores">
+                        🏆 Ver ganadores
+                    </a>
+                </div>
+
+                <!-- Nota -->
+                <div class="footer-note">
+                    Cámara de Comercio · Evento Especial
+                </div>
+
             </div>
+
         </div>
 
-        <!-- Controles -->
-        <div class="controls">
-            <button id="btnGirar">🎯 Girar ruleta</button>
-
-            <a href="ganadores.php" class="btn-ganadores">
-                🏆 Ver ganadores
-            </a>
-        </div>
-
-        <!-- Nota -->
-        <div class="footer-note">
-            Cámara de Comercio · Evento Especial
-        </div>
+        <!-- SIDEBAR NAVIDAD -->
+        <aside class="sidebar-navidad">
+            <iframe
+                src="arbolito.ani.html"
+                title="Animación Navidad"
+                loading="lazy"
+                allowtransparency="true">
+            </iframe>
+        </aside>
 
     </div>
 
@@ -210,5 +273,6 @@
     <script src="ruleta.js"></script>
 
 </body>
+
 
 </html>
