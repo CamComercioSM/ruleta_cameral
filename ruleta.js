@@ -134,6 +134,8 @@ function alertPrize(indicatedSegment) {
     </div>
 `;
 
+    playWin();
+    
     Swal.fire({
         title: '🎉 ¡Tenemos ganador!',
         html: html,
@@ -255,8 +257,16 @@ function mezclarArray(array) {
     }
     return arr;
 }
-let audio = new Audio('tick.mp3');  // Create audio object and load tick.mp3 file.
 
+
+let audioWin = new Audio('win.mp3');  // Create audio object and load tick.mp3 file.
+function playWin() {
+    audioWin.pause();
+    audioWin.currentTime = 0;
+    audioWin.play();
+}
+
+let audio = new Audio('tick.mp3');  // Create audio object and load tick.mp3 file.
 function playSound() {
     // Stop and rewind the sound if it already happens to be playing.
     audio.pause();

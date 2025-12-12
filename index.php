@@ -32,13 +32,13 @@
         /* Contenido principal */
         .main-content {
             flex: 1;
-            padding-right: 20%;
+            padding-right: 23%;
             /* espacio para el sidebar */
         }
 
         /* Sidebar */
         .sidebar-navidad {
-            width: 20%;
+            width: 23%;
             position: fixed;
             top: 0;
             right: 0;
