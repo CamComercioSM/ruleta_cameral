@@ -74,7 +74,7 @@ document.addEventListener("readystatechange", async () => {
 
         await mostrarCuentaRegresiva();
 
-        theWheel.animation.duration = Math.floor(Math.random() * (7 - 5 + 1)) + 5;
+        theWheel.animation.duration = 5 + (Math.random() * (4));
         theWheel.stopAnimation(false);
         theWheel.rotationAngle = 0;
         theWheel.draw();
@@ -185,7 +185,7 @@ function mostrarCuentaRegresiva() {
     return new Promise((resolve) => {
 
         const premio = premios.find(p => p.premioGiro === premioGiro);
-        let s = 3;
+        let s = 5;
 
         Swal.fire({
             width: 420,

@@ -32,13 +32,13 @@
         /* Contenido principal */
         .main-content {
             flex: 1;
-            padding-right: 35%;
+            padding-right: 20%;
             /* espacio para el sidebar */
         }
 
         /* Sidebar */
         .sidebar-navidad {
-            width: 35%;
+            width: 20%;
             position: fixed;
             top: 0;
             right: 0;
@@ -214,6 +214,21 @@
         <li></li>
         <li></li>
         <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
     </ul>
 
     <div class="layout">
@@ -233,7 +248,7 @@
                 <div class="the_wheel">
                     <div class="wheel-wrapper">
                         <img src="image.png" alt="Puntero ruleta" class="wheel-pointer">
-                        <canvas id="canvas" width="1200" height="850">
+                        <canvas id="canvas" width="1200" height="800">
                             Tu navegador no soporta canvas.
                         </canvas>
                     </div>
