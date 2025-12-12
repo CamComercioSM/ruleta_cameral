@@ -9,7 +9,7 @@
     <link rel="stylesheet"
         href="javascript-winwheel-2.8.0/javascript-winwheel-2.8.0/examples/basic_code_wheel/main.css"
         type="text/css" />
-
+    <link rel="stylesheet" href="/lucesnavidad.css">
     <!-- Librerías -->
     <script src="javascript-winwheel-2.8.0/javascript-winwheel-2.8.0/Winwheel.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
@@ -50,9 +50,10 @@
             opacity: 0.9;
         }
 
+
         .the_wheel {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 15px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
         }
@@ -106,10 +107,70 @@
             opacity: 0.75;
             text-align: center;
         }
+
+        .wheel-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            /* Ajusta al tamaño de tu PNG */
+            pointer-events: none;
+            /* Para que no bloquee clics en el canvas */
+        }
     </style>
 </head>
 
 <body>
+<ul class="lightrope">
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
 
     <div class="app-container">
 
@@ -121,9 +182,12 @@
 
         <!-- Ruleta -->
         <div class="the_wheel">
-            <canvas id="canvas" width="1200" height="850">
-                Tu navegador no soporta canvas.
-            </canvas>
+            <div class="wheel-wrapper">
+                <img src="image.png" alt="Puntero ruleta" class="wheel-pointer">
+                <canvas id="canvas" width="1200" height="850">
+                    Tu navegador no soporta canvas.
+                </canvas>
+            </div>
         </div>
 
         <!-- Controles -->

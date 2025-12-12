@@ -1,13 +1,14 @@
 let canvas = document.getElementById("canvas");
 let premioGiro = localStorage.getItem('premioGiro') || "1";
 let premios = [];
+let colaboradoresTotales = [];
 let colaboradores = [];
 let theWheel = null;
 
 document.addEventListener("readystatechange", async () => {
-    const res = await cargarInformacion('colaboradores_20251211.json');
+    colaboradoresTotales = await cargarInformacion('colaboradores_20251211.json');
     premios = await cargarInformacion('premios.json');
-    console.log(res.length + ' colaboradores cargados.');
+    console.log(colaboradoresTotales.length + ' colaboradores cargados.');
     const datosNoAsistencia = localStorage.getItem('noAsistencia');
     const noAsistencia = datosNoAsistencia ? JSON.parse(datosNoAsistencia) : [];
     const noAsistenciaSet = new Set(noAsistencia);
@@ -17,9 +18,9 @@ document.addEventListener("readystatechange", async () => {
     const ganadoresSet = new Set(ganadoresPrevios.map(g => g.identificacion));
 
     const colaboradoresFiltrados = mezclarArray(
-        res.filter(colaborador => {
+        colaboradoresTotales.filter(colaborador => {
             const id = colaborador.colaboradorIDENTIFICACION;
-            return noAsistenciaSet.has(id) && !ganadoresSet.has(id);
+            return !noAsistenciaSet.has(id) && !ganadoresSet.has(id);
         })
     );
 
@@ -34,7 +35,7 @@ document.addEventListener("readystatechange", async () => {
 
         return {
             fillStyle: colorDegradado(colorInicio, colorFin, factor),
-            text: colaborador.colaboradorNOMBRECOMPLETO,
+            text: colaborador.colaboradorNOMBRECOMPLETO.substring(0, 15),
             key: colaborador.colaboradorIDENTIFICACION,
             foto: colaborador.colaboradorFOTO
         };
@@ -47,13 +48,15 @@ document.addEventListener("readystatechange", async () => {
         outerRadius: canvas.height / 2,
         centerX: canvas.width / 2,
         centerY: canvas.height / 2,
-        textFontSize: 9,
+        textFontSize: 12,
+        textAlignment: 'outer',
         segments: colaboradores,
         animation: {
             type: 'spinToStop',
             duration: 5,
             spins: 8,
-            callbackFinished: alertPrize
+            callbackFinished: alertPrize,
+            'callbackSound': playSound,
         }
     });
 
@@ -82,8 +85,10 @@ document.addEventListener("readystatechange", async () => {
 function alertPrize(indicatedSegment) {
     // 🔹 Buscar el premio según el número de giro actual
     const premio = premios.find(p => p.premioGiro == premioGiro) || null;
+    let nombreCompleto = colaboradoresTotales.find(c => c.colaboradorIDENTIFICACION === indicatedSegment.key)?.colaboradorNOMBRECOMPLETO;
+
     const ganador = {
-        nombre: indicatedSegment.text,
+        nombre: nombreCompleto,
         identificacion: indicatedSegment.key,
         foto: indicatedSegment.foto,
         premioNombre: premio.premioNombre,
@@ -108,7 +113,7 @@ function alertPrize(indicatedSegment) {
     // 🔹 Construir HTML del modal del ganador
     let html = `
     <div style="text-align:center;">
-        <h2 style="margin-bottom:8px;">${indicatedSegment.text}</h2>
+        <h2 style="margin-bottom:8px;">${nombreCompleto}</h2>
 
         <div style="font-size:1.1rem; margin-bottom:6px; color:#6c757d;">
             🎁 Premio ganado
@@ -155,12 +160,14 @@ function alertPrize(indicatedSegment) {
             centerX: canvas.width / 2,
             centerY: canvas.height / 2,
             textFontSize: 9,
+            textAlignment: 'outer',
             segments: colaboradores,
             animation: {
                 type: 'spinToStop',
                 duration: 5,
                 spins: 8,
-                callbackFinished: alertPrize
+                callbackFinished: alertPrize,
+                'callbackSound': playSound,
             }
         });
 
@@ -247,4 +254,14 @@ function mezclarArray(array) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
+}
+let audio = new Audio('tick.mp3');  // Create audio object and load tick.mp3 file.
+
+function playSound() {
+    // Stop and rewind the sound if it already happens to be playing.
+    audio.pause();
+    audio.currentTime = 0;
+
+    // Play the sound.
+    audio.play();
 }
