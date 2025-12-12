@@ -159,7 +159,7 @@ function alertPrize(indicatedSegment) {
             outerRadius: canvas.height / 2,
             centerX: canvas.width / 2,
             centerY: canvas.height / 2,
-            textFontSize: 9,
+            textFontSize: 12,
             textAlignment: 'outer',
             segments: colaboradores,
             animation: {

@@ -159,10 +159,10 @@
 
         .wheel-pointer {
             position: absolute;
-            top: -50px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
+            width: 45px;
             /* Ajusta al tamaño de tu PNG */
             pointer-events: none;
             /* Para que no bloquee clics en el canvas */
